@@ -1,0 +1,114 @@
+﻿<Page
+    x:Class="Jeopardy.EditJeopardy"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jeopardy"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="EditJeopardy"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Black"
+    mc:Ignorable="d">
+
+    <Grid Background="#1A1A1A">
+
+        <Grid
+            x:Name="EditPanel"
+            Panel.ZIndex="99"
+            Visibility="Collapsed">
+            <Border Background="#AA000000" />
+
+            <Border
+                Width="400"
+                Padding="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#2D2D2D"
+                BorderBrush="Gray"
+                BorderThickness="1">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="Edit" />
+
+                    <TextBlock Foreground="LightGray" Text="Score:" />
+                    <TextBox
+                        x:Name="NewScore"
+                        Margin="0,5,0,10"
+                        Padding="5" />
+
+                    <StackPanel
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+
+                        <Button
+                            Width="80"
+                            Margin="5"
+                            Click="SaveData"
+                            Content="Save" />
+                        <Button
+                            Width="80"
+                            Margin="5"
+                            Click="EditGame"
+                            Content="Edit" />
+                        <Button
+                            Width="80"
+                            Margin="5"
+                            Click="HideEditPanel"
+                            Content="Cancel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Viewbox
+            Margin="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Stretch="Uniform">
+            <StackPanel Orientation="Horizontal">
+
+                <StackPanel
+                    x:Name="BoardContainer"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal" />
+
+                <Button
+                    x:Name="AddColumnBtn"
+                    Width="80"
+                    Height="500"
+                    Margin="10,0,10,0"
+                    Background="#333"
+                    BorderBrush="#555"
+                    BorderThickness="2"
+                    Click="AddColumnBtn_Click"
+                    Content="+"
+                    FontSize="40"
+                    Foreground="White" />
+            </StackPanel>
+        </Viewbox>
+
+
+        <Button Margin="0,978,1718,0"
+                FontSize="25"
+                Background="#333"
+                Foreground="White"
+                BorderThickness="2"
+                BorderBrush="#555"
+                Click="GoBack">Back</Button>
+
+        <Button Margin="1708,978,0,0"
+                FontSize="25"
+                Background="#333"
+                Foreground="White"
+                BorderThickness="2"
+                BorderBrush="#555"
+                Click="SaveGame">Save</Button>
+
+    </Grid>
+</Page>

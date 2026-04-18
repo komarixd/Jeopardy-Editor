@@ -1,0 +1,163 @@
+﻿<Page
+    x:Class="Jeopardy.EditCanvasPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Jeopardy"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="EditCanvasPage"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Focusable="True"
+    PreviewMouseDown="Page_PreviewMouseDown"
+    mc:Ignorable="d">
+
+    <Grid x:Name="grid1">
+
+        <Grid
+            x:Name="SettingPanel"
+            Panel.ZIndex="99"
+            Visibility="Collapsed">
+            <Border
+                Width="1920"
+                Height="1080"
+                Background="#AA000000" />
+
+            <Border
+                Width="300"
+                Padding="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#2D2D2D"
+                BorderBrush="Gray"
+                BorderThickness="1">
+                <StackPanel>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="Settings" />
+
+
+                    <StackPanel Margin="0,25,0,0">
+                        <Button
+                            Width="90"
+                            Height="30"
+                            Margin="5"
+                            Background="#333"
+                            BorderBrush="#555"
+                            BorderThickness="2"
+                            Click="SaveButton_Click"
+                            Content="Save &amp; Exit"
+                            FontSize="14"
+                            Foreground="White" />
+
+                        <Button
+                            Width="90"
+                            Height="30"
+                            Margin="5"
+                            Background="#333"
+                            BorderBrush="#555"
+                            BorderThickness="2"
+                            Click="HideSettingPanel"
+                            Content="Cancel"
+                            FontSize="14"
+                            Foreground="White" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Canvas
+            x:Name="MainCanvas"
+            Background="Transparent"
+            Focusable="True">
+
+            <!--  Movable Menu Panel  -->
+            <Border
+                x:Name="MovablePanel"
+                Canvas.Top="50"
+                Width="80"
+                Height="307"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Panel.ZIndex="10"
+                Background="LightSkyBlue"
+                CornerRadius="7"
+                MouseLeftButtonDown="MovablePanel_MouseLeftButtonDown"
+                MouseLeftButtonUp="MovablePanel_MouseLeftButtonUp"
+                MouseMove="MovablePanel_MouseMove">
+
+                <StackPanel Margin="10">
+                    <Button
+                        Width="55"
+                        Height="55"
+                        Margin="0,45,0,5"
+                        Click="Cursor_Click"
+                        Cursor="Hand">
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Images/cursor.png"
+                                ToolTip="Cursor" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        Width="55"
+                        Height="55"
+                        Margin="0,0,0,5"
+                        Click="Text_Click">
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Images/text.png"
+                                ToolTip="Add Text" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        Width="55"
+                        Height="55"
+                        Margin="0,0,0,5"
+                        Click="Image_Click">
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Images/image.png"
+                                ToolTip="Add Image" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        Width="55"
+                        Height="55"
+                        Margin="0,0,0,5"
+                        Click="Audio_Click">
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Images/audio.png"
+                                ToolTip="Add Audio" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </Border>
+
+        </Canvas>
+    </Grid>
+</Page>
