@@ -1,4 +1,4 @@
-# Jeopardy Game Editor
+# Jeopardy Editor
 ![Status](https://img.shields.io/badge/Status-Stable-green)
 ![Ststus](https://img.shields.io/badge/.NET-4.7.2-blue)
 
