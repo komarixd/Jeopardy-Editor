@@ -14,6 +14,9 @@ using System.IO;
 
 namespace Jeopardy
 {
+    // =======================
+    // DATA MODELS
+    // =======================
     public class CanvasItemModel
     {
         public string ElementType { get; set; } // "Text", "Image", or "Audio"
@@ -24,12 +27,21 @@ namespace Jeopardy
         public double Height { get; set; }
     }
 
+    public class HintPageModel
+    {
+        public string HintTitle { get; set; }
+        public List<CanvasItemModel> Items { get; set; } = new List<CanvasItemModel>();
+    }
+
+    // =======================
+    // MAIN PAGE CLASS
+    // =======================
     public partial class EditCanvasPage : Page
     {
         string folder;
-
         bool isDraggingPanel = false;
         Point panelOffset;
+        Random rnd;
 
         private enum ToolType { Cursor, Text, Image, Audio }
         private ToolType currentTool = ToolType.Cursor;
@@ -37,6 +49,9 @@ namespace Jeopardy
         // Global selection
         FrameworkElement selectedElement = null;
         ResizeAdorner selectedAdorner = null;
+
+        // Page/Hint selection
+        Border selectedHintThumbnail = null;
 
         static Cursor CCursor = new Cursor(Application.GetResourceStream(
             new Uri("/Resources/Cursors/cursor_white.cur", UriKind.Relative)).Stream);
@@ -52,6 +67,7 @@ namespace Jeopardy
             InitializeComponent();
             Cursor_Click(null, null);
 
+            rnd = new Random();
             this.folder = folder;
 
             this.Loaded += (s, e) =>
@@ -61,15 +77,13 @@ namespace Jeopardy
                 {
                     window.PreviewKeyDown += Page_PreviewKeyDown;
                 }
-                LoadButton_Click(null, null);
+                LoadGame();
             };
-            
         }
 
         // =======================
-        // Selection helpers
+        // SELECTION HELPERS
         // =======================
-
         void SelectElement(FrameworkElement element, ResizeAdorner adorner)
         {
             DeselectElement();
@@ -88,9 +102,8 @@ namespace Jeopardy
         }
 
         // =======================
-        // Movable Panel
+        // MOVABLE PANEL
         // =======================
-
         private void MovablePanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             isDraggingPanel = true;
@@ -114,9 +127,8 @@ namespace Jeopardy
         }
 
         // =======================
-        // Tool buttons
+        // TOOL BUTTONS
         // =======================
-
         private void Cursor_Click(object sender, RoutedEventArgs e)
         {
             currentTool = ToolType.Cursor;
@@ -142,9 +154,8 @@ namespace Jeopardy
         }
 
         // =======================
-        // Canvas click
+        // CANVAS CLICK
         // =======================
-
         private void Page_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point pos = e.GetPosition(MainCanvas);
@@ -154,13 +165,11 @@ namespace Jeopardy
             if (hit == MainCanvas || hit == null)
             {
                 DeselectElement();
-
                 MainCanvas.Focus();
-                Keyboard.Focus(this);  
+                Keyboard.Focus(this);
             }
 
-            if (currentTool == ToolType.Cursor)
-                return;
+            if (currentTool == ToolType.Cursor) return;
 
             // Prevent placing over movable panel
             if (hit is FrameworkElement fe &&
@@ -172,11 +181,9 @@ namespace Jeopardy
                 case ToolType.Text:
                     CreateText(pos);
                     break;
-
                 case ToolType.Image:
                     CreateImage(pos);
                     break;
-
                 case ToolType.Audio:
                     CreateAudio(pos);
                     break;
@@ -186,9 +193,8 @@ namespace Jeopardy
         }
 
         // =======================
-        // Create Text
+        // CREATE ELEMENTS
         // =======================
-
         void CreateText(Point pos, string loadedText = "Enter text here", double w = 200, double h = 40)
         {
             TextBox tb = new TextBox
@@ -210,7 +216,6 @@ namespace Jeopardy
             Canvas.SetLeft(tb, pos.X);
             Canvas.SetTop(tb, pos.Y);
 
-
             ResizeAdorner adorner = new ResizeAdorner(tb);
             AdornerLayer.GetAdornerLayer(MainCanvas).Add(adorner);
             adorner.Visibility = Visibility.Hidden;
@@ -220,14 +225,12 @@ namespace Jeopardy
 
             tb.MouseEnter += (_, __) =>
             {
-                if (selectedElement != tb)
-                    adorner.Visibility = Visibility.Visible;
+                if (selectedElement != tb) adorner.Visibility = Visibility.Visible;
             };
 
             tb.MouseLeave += (_, __) =>
             {
-                if (selectedElement != tb)
-                    adorner.Visibility = Visibility.Hidden;
+                if (selectedElement != tb) adorner.Visibility = Visibility.Hidden;
             };
 
             tb.PreviewMouseLeftButtonDown += (s, e) =>
@@ -248,14 +251,12 @@ namespace Jeopardy
                     tb.Focus();
                     tb.CaretIndex = tb.Text.Length;
                 }
-
                 e.Handled = true;
             };
 
             tb.MouseMove += (_, e) =>
             {
                 if (!dragging || e.LeftButton != MouseButtonState.Pressed) return;
-
                 Point p = e.GetPosition(MainCanvas);
                 Canvas.SetLeft(tb, p.X - offset.X);
                 Canvas.SetTop(tb, p.Y - offset.Y);
@@ -267,19 +268,12 @@ namespace Jeopardy
                 tb.ReleaseMouseCapture();
             };
 
-            tb.LostFocus += (_, __) =>
-            {
-                tb.IsReadOnly = true;
-            };
+            tb.LostFocus += (_, __) => { tb.IsReadOnly = true; };
         }
-
-        // =======================
-        // Create Image
-        // =======================
 
         void CreateImage(Point pos, string filePath = null, double w = double.NaN, double h = double.NaN)
         {
-            if (filePath == null) 
+            if (filePath == null)
             {
                 OpenFileDialog dlg = new OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp;*.gif" };
                 if (dlg.ShowDialog() != true) return;
@@ -317,22 +311,18 @@ namespace Jeopardy
 
             img.MouseEnter += (_, __) =>
             {
-                if (selectedElement != img)
-                    adorner.Visibility = Visibility.Visible;
+                if (selectedElement != img) adorner.Visibility = Visibility.Visible;
             };
 
             img.MouseLeave += (_, __) =>
             {
-                if (selectedElement != img)
-                    adorner.Visibility = Visibility.Hidden;
+                if (selectedElement != img) adorner.Visibility = Visibility.Hidden;
             };
 
             img.PreviewMouseLeftButtonDown += (s, e) =>
             {
                 if (currentTool != ToolType.Cursor) return;
-
                 SelectElement(img, adorner);
-
                 offset = e.GetPosition(img);
                 dragging = true;
                 img.CaptureMouse();
@@ -342,7 +332,6 @@ namespace Jeopardy
             img.MouseMove += (_, e) =>
             {
                 if (!dragging || e.LeftButton != MouseButtonState.Pressed) return;
-
                 Point p = e.GetPosition(MainCanvas);
                 Canvas.SetLeft(img, p.X - offset.X);
                 Canvas.SetTop(img, p.Y - offset.Y);
@@ -354,10 +343,6 @@ namespace Jeopardy
                 img.ReleaseMouseCapture();
             };
         }
-
-        // =======================
-        // Create Audio
-        // =======================
 
         void CreateAudio(Point pos, string filePath = null)
         {
@@ -371,12 +356,8 @@ namespace Jeopardy
             bool isPlaying = false;
             bool isDraggingTimeline = false;
 
-            DispatcherTimer timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
+            DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
 
-            // ===== ROOT =====
             Border root = new Border
             {
                 Background = Brushes.Transparent,
@@ -393,16 +374,10 @@ namespace Jeopardy
                 Background = Brushes.Transparent
             };
 
-            StackPanel panel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
+            StackPanel panel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
             panelBorder.Child = panel;
             root.Child = panelBorder;
 
-            // ===== MEDIA ELEMENT =====
             MediaElement media = new MediaElement
             {
                 LoadedBehavior = MediaState.Manual,
@@ -413,33 +388,9 @@ namespace Jeopardy
                 IsHitTestVisible = false
             };
 
-            // ===== PLAY BUTTON =====
-            Button playButton = new Button
-            {
-                Content = "▶",
-                Width = 40,
-                Height = 40,
-                FontSize = 18
-            };
-
-            // ===== TIMELINE (SEEKABLE) =====
-            Slider timeline = new Slider
-            {
-                Width = 200,
-                Minimum = 0,
-                Margin = new Thickness(10, 0, 10, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            // ===== VOLUME SLIDER =====
-            Slider volume = new Slider
-            {
-                Width = 80,
-                Minimum = 0,
-                Maximum = 1,
-                Value = 0.8,
-                VerticalAlignment = VerticalAlignment.Center
-            };
+            Button playButton = new Button { Content = "▶", Width = 40, Height = 40, FontSize = 18 };
+            Slider timeline = new Slider { Width = 200, Minimum = 0, Margin = new Thickness(10, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+            Slider volume = new Slider { Width = 80, Minimum = 0, Maximum = 1, Value = 0.8, VerticalAlignment = VerticalAlignment.Center };
 
             Button closeButton = new Button
             {
@@ -459,18 +410,18 @@ namespace Jeopardy
                 MainCanvas.Children.Remove(root);
             };
 
+            media.Unloaded += (_, __) => { media.Stop(); timer.Stop(); };
+
             panel.Children.Add(media);
             panel.Children.Add(playButton);
             panel.Children.Add(timeline);
             panel.Children.Add(volume);
-
             panel.Children.Add(closeButton);
 
             MainCanvas.Children.Add(root);
             Canvas.SetLeft(root, pos.X);
             Canvas.SetTop(root, pos.Y);
 
-            // ===== MEDIA EVENTS =====
             media.MediaOpened += (_, __) =>
             {
                 if (media.NaturalDuration.HasTimeSpan)
@@ -488,19 +439,14 @@ namespace Jeopardy
 
             media.MediaFailed += (_, e) =>
             {
-                MessageBox.Show(
-                    e.ErrorException?.Message ?? "Unknown audio error",
-                    "Audio Error");
+                MessageBox.Show(e.ErrorException?.Message ?? "Unknown audio error", "Audio Error");
             };
 
-            // ===== TIMER UPDATE =====
             timer.Tick += (_, __) =>
             {
-                if (!isDraggingTimeline)
-                    timeline.Value = media.Position.TotalSeconds;
+                if (!isDraggingTimeline) timeline.Value = media.Position.TotalSeconds;
             };
 
-            // ===== PLAY / PAUSE =====
             playButton.Click += (_, __) =>
             {
                 if (isPlaying)
@@ -519,15 +465,12 @@ namespace Jeopardy
                 }
             };
 
-            // ===== SEEK =====
             timeline.Loaded += (_, __) =>
             {
                 timeline.ApplyTemplate();
-
                 if (timeline.Template != null)
                 {
                     var track = timeline.Template.FindName("PART_Track", timeline) as Track;
-
                     if (track != null)
                     {
                         track.DecreaseRepeatButton.Background = Brushes.LimeGreen;
@@ -535,38 +478,23 @@ namespace Jeopardy
                     }
                 }
             };
-            timeline.PreviewMouseDown += (_, __) =>
-            {
-                isDraggingTimeline = true;
-            };
 
+            timeline.PreviewMouseDown += (_, __) => { isDraggingTimeline = true; };
             timeline.PreviewMouseUp += (_, __) =>
             {
                 media.Position = TimeSpan.FromSeconds(timeline.Value);
                 isDraggingTimeline = false;
             };
 
-            // ===== VOLUME =====
-            volume.ValueChanged += (_, __) =>
-            {
-                media.Volume = volume.Value;
-            };
-
-            // ===== SET SOURCE LAST =====
+            volume.ValueChanged += (_, __) => { media.Volume = volume.Value; };
             media.Source = new Uri(filePath);
 
-            // dragging logic
             bool dragging = false;
             Point offset = new Point();
 
             root.MouseLeftButtonDown += (s, e) =>
             {
-                // If clicking a control → let it work
-                if (e.OriginalSource is Button ||
-                    e.OriginalSource is Slider ||
-                    e.OriginalSource is Thumb)
-                    return;
-
+                if (e.OriginalSource is Button || e.OriginalSource is Slider || e.OriginalSource is Thumb) return;
                 dragging = true;
                 offset = e.GetPosition(root);
                 root.CaptureMouse();
@@ -585,12 +513,10 @@ namespace Jeopardy
                 dragging = false;
                 root.ReleaseMouseCapture();
             };
-
         }
 
         private void Page_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            //Console.Write("ASDAS");
             if (e.Key == Key.Delete && selectedElement != null)
             {
                 MainCanvas.Children.Remove(selectedElement);
@@ -606,22 +532,112 @@ namespace Jeopardy
 
                 if (SettingPanel.Visibility == Visibility.Visible)
                     SettingPanel.Visibility = Visibility.Collapsed;
-                else 
+                else
                     SettingPanel.Visibility = Visibility.Visible;
             }
         }
 
-        // SAVE & LOAD FUNC
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        // ==========================
+        // HINT PAGE MULTI-PAGE LOGIC
+        // ==========================
+        private void AddHintPage(object sender, RoutedEventArgs e)
         {
-            List<CanvasItemModel> itemsToSave = new List<CanvasItemModel>();
+            CreateThumbnail(new HintPageModel { HintTitle = "Hint" });
+        }
 
+        private void CreateThumbnail(HintPageModel pageData)
+        {
+            Border hintPage = new Border
+            {
+                Width = 144,
+                Height = 81,
+                Margin = new Thickness(5),
+                BorderThickness = new Thickness(3),
+                BorderBrush = Brushes.Black,
+                Background = Brushes.DimGray,
+                Tag = pageData // Store the data model here!
+            };
+
+            Grid cellGrid = new Grid();
+
+            TextBox text = new TextBox
+            {
+                Text = pageData.HintTitle,
+                FontSize = 30,
+                Background = Brushes.Transparent,
+                Foreground = Brushes.White,
+                BorderThickness = new Thickness(0),
+                TextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+
+            text.TextChanged += (s, ev) => pageData.HintTitle = text.Text;
+
+            Button delBtn = new Button
+            {
+                Content = "X",
+                FontSize = 10,
+                Width = 20,
+                Height = 20,
+                Foreground = Brushes.White,
+                FontWeight = FontWeights.Bold,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Right,
+            };
+
+            delBtn.Click += (_, __) =>
+            {
+                HintPageContainer.Children.Remove(hintPage);
+                if (selectedHintThumbnail == hintPage)
+                {
+                    selectedHintThumbnail = null;
+                    LoadPageToCanvas(new List<CanvasItemModel>()); // Clear screen
+                }
+            };
+
+            hintPage.PreviewMouseLeftButtonDown += (s, e) =>
+            {
+                if (e.OriginalSource is Button) return;
+
+                if (selectedHintThumbnail != null)
+                {
+                    ((HintPageModel)selectedHintThumbnail.Tag).Items = CaptureCurrentCanvas();
+                    selectedHintThumbnail.BorderBrush = Brushes.Black;
+                }
+
+                LoadPageToCanvas(pageData.Items);
+
+                selectedHintThumbnail = hintPage;
+                hintPage.BorderBrush = Brushes.DeepSkyBlue;
+            };
+
+            cellGrid.Children.Add(text);
+            cellGrid.Children.Add(delBtn);
+            hintPage.Child = cellGrid;
+
+            HintPageContainer.Children.Add(hintPage);
+
+            // Automatically select if it's the very first page
+            if (HintPageContainer.Children.Count == 1)
+            {
+                var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = UIElement.PreviewMouseLeftButtonDownEvent };
+                hintPage.RaiseEvent(args);
+            }
+        }
+
+        // =======================
+        // SAVE & LOAD
+        // =======================
+        private List<CanvasItemModel> CaptureCurrentCanvas()
+        {
+            List<CanvasItemModel> items = new List<CanvasItemModel>();
             foreach (UIElement child in MainCanvas.Children)
             {
                 if (child is FrameworkElement fe)
                 {
-                    // Don't save the toolbar/panel itself!
-                    if (fe.Name == "MovablePanel") continue;
+                    if (fe.Name == "MovablePanel" || fe.Name == "HintPanel") continue;
 
                     CanvasItemModel model = new CanvasItemModel
                     {
@@ -631,50 +647,43 @@ namespace Jeopardy
                         Height = double.IsNaN(fe.Height) ? fe.ActualHeight : fe.Height
                     };
 
-                    // Identify the element and extract its specific content
                     if (fe is TextBox tb)
                     {
                         model.ElementType = "Text";
                         model.Content = tb.Text;
-                        itemsToSave.Add(model);
+                        items.Add(model);
                     }
                     else if (fe is Image img && fe.Tag is string imgPath)
                     {
                         model.ElementType = "Image";
                         model.Content = imgPath;
-                        itemsToSave.Add(model);
+                        items.Add(model);
                     }
                     else if (fe is Border border && fe.Tag is string audioPath)
                     {
                         model.ElementType = "Audio";
                         model.Content = audioPath;
-                        itemsToSave.Add(model);
+                        items.Add(model);
                     }
                 }
-
             }
-            string json = JsonSerializer.Serialize(itemsToSave, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(System.IO.Path.Combine(this.folder, "data.json"), json);
-            NavigationService.GoBack();
+            return items;
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        private void LoadPageToCanvas(List<CanvasItemModel> items)
         {
-            string json = File.ReadAllText(System.IO.Path.Combine(this.folder, "data.json"));
-            List<CanvasItemModel> loadedItems = JsonSerializer.Deserialize<List<CanvasItemModel>>(json);
-
-            // 1. Clear current canvas (but keep the MovablePanel)
             DeselectElement();
+
+            // Clear current canvas (but keep panels)
             for (int i = MainCanvas.Children.Count - 1; i >= 0; i--)
             {
-                if (MainCanvas.Children[i] is FrameworkElement fe && fe.Name != "MovablePanel")
+                if (MainCanvas.Children[i] is FrameworkElement fe && fe.Name != "MovablePanel" && fe.Name != "HintPanel")
                 {
                     MainCanvas.Children.RemoveAt(i);
                 }
             }
 
-            // 2. Reconstruct items
-            foreach (var item in loadedItems)
+            foreach (var item in items)
             {
                 Point pos = new Point(item.X, item.Y);
 
@@ -684,14 +693,55 @@ namespace Jeopardy
                 }
                 else if (item.ElementType == "Image")
                 {
-                    if (File.Exists(item.Content)) // Ensure image still exists on PC
+                    if (File.Exists(item.Content))
                         CreateImage(pos, item.Content, item.Width, item.Height);
                 }
                 else if (item.ElementType == "Audio")
                 {
-                    if (File.Exists(item.Content)) // Ensure audio still exists on PC
+                    if (File.Exists(item.Content))
                         CreateAudio(pos, item.Content);
                 }
+            }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Sync the active screen to the active thumbnail before saving
+            if (selectedHintThumbnail != null)
+                ((HintPageModel)selectedHintThumbnail.Tag).Items = CaptureCurrentCanvas();
+
+            List<HintPageModel> pagesToSave = new List<HintPageModel>();
+
+            foreach (var child in HintPageContainer.Children)
+            {
+                if (child is Border b && b.Tag is HintPageModel model)
+                {
+                    pagesToSave.Add(model);
+                }
+            }
+
+            string json = JsonSerializer.Serialize(pagesToSave, new JsonSerializerOptions { WriteIndented = true });
+            // Note: Changed file name to hints.json to fit the new multi-page structure
+            File.WriteAllText(System.IO.Path.Combine(this.folder, "hints.json"), json);
+            NavigationService.GoBack();
+        }
+
+        private void LoadGame()
+        {
+            string path = System.IO.Path.Combine(this.folder, "hints.json");
+
+            if (!File.Exists(path)) return;
+
+            string json = File.ReadAllText(path);
+            List<HintPageModel> loadedPages = JsonSerializer.Deserialize<List<HintPageModel>>(json);
+
+            HintPageContainer.Children.Clear();
+            selectedHintThumbnail = null;
+            LoadPageToCanvas(new List<CanvasItemModel>()); 
+
+            foreach (var page in loadedPages)
+            {
+                CreateThumbnail(page);
             }
         }
 
@@ -699,7 +749,5 @@ namespace Jeopardy
         {
             SettingPanel.Visibility = Visibility.Hidden;
         }
-
-
     }
 }

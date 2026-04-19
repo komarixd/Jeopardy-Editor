@@ -12,6 +12,14 @@
     mc:Ignorable="d">
 
     <Grid>
+
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Offset="0.0" Color="#2A2A2A" />
+                <GradientStop Offset="1.0" Color="#0A0A0A" />
+            </RadialGradientBrush>
+        </Grid.Background>
+
         <Label x:Name="Mode">Mode</Label>
 
         <!--  New Map Box  -->
@@ -19,6 +27,8 @@
             x:Name="NewMapPanel"
             Panel.ZIndex="99"
             Visibility="Collapsed">
+
+
             <Border Background="#AA000000" />
 
             <Border
@@ -188,13 +198,16 @@
                 </TextBlock.Style>
             </TextBlock>
         </Grid>
-        <Button Margin="1344,141,250,835" 
-                Click="ShowNewMapPanel"
-                Background="#333"
-                Foreground="White"
-                BorderThickness="2"
-                BorderBrush="#555"
-                >New Map</Button>
+        <Button
+            Margin="1344,141,250,835"
+            Background="#333"
+            BorderBrush="#555"
+            BorderThickness="2"
+            Click="ShowNewMapPanel"
+            FontSize="30"
+            Foreground="White">
+            New Map
+        </Button>
 
         <ScrollViewer Margin="250,250,250,0" VerticalScrollBarVisibility="Auto">
             <UniformGrid
@@ -206,21 +219,27 @@
 
 
 
-        <Button Margin="0,978,1718,0"
-                FontSize="25"
-                Background="#333"
-                Foreground="White"
-                BorderThickness="2"
-                BorderBrush="#555"
-                Click="GoMenu">Back</Button>
-        
-        <Button Margin="1718,978,0,0" 
-                FontSize="25"
-                Background="#333"
-                Foreground="White"
-                BorderThickness="2"
-                BorderBrush="#555"
-                Click="Refresh">Refresh Map</Button>
+        <Button
+            Margin="0,978,1718,0"
+            Background="#333"
+            BorderBrush="#555"
+            BorderThickness="2"
+            Click="GoMenu"
+            FontSize="25"
+            Foreground="White">
+            Back
+        </Button>
+
+        <Button
+            Margin="1718,978,0,0"
+            Background="#333"
+            BorderBrush="#555"
+            BorderThickness="2"
+            Click="Refresh"
+            FontSize="25"
+            Foreground="White">
+            Refresh Map
+        </Button>
 
     </Grid>
 </Page>

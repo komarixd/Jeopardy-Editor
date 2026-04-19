@@ -11,7 +11,14 @@
     Background="Black"
     mc:Ignorable="d">
 
-    <Grid Background="#1A1A1A">
+    <Grid>
+
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Offset="0.0" Color="#2A2A2A" />
+                <GradientStop Offset="1.0" Color="#0A0A0A" />
+            </RadialGradientBrush>
+        </Grid.Background>
 
         <Grid
             x:Name="EditPanel"
@@ -94,21 +101,27 @@
         </Viewbox>
 
 
-        <Button Margin="0,978,1718,0"
-                FontSize="25"
-                Background="#333"
-                Foreground="White"
-                BorderThickness="2"
-                BorderBrush="#555"
-                Click="GoBack">Back</Button>
+        <Button
+            Margin="0,978,1718,0"
+            Background="#333"
+            BorderBrush="#555"
+            BorderThickness="2"
+            Click="GoBack"
+            FontSize="25"
+            Foreground="White">
+            Back
+        </Button>
 
-        <Button Margin="1708,978,0,0"
-                FontSize="25"
-                Background="#333"
-                Foreground="White"
-                BorderThickness="2"
-                BorderBrush="#555"
-                Click="SaveGame">Save</Button>
+        <Button
+            Margin="1708,978,0,0"
+            Background="#333"
+            BorderBrush="#555"
+            BorderThickness="2"
+            Click="SaveGame"
+            FontSize="25"
+            Foreground="White">
+            Save
+        </Button>
 
     </Grid>
 </Page>

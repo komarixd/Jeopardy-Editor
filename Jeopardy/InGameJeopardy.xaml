@@ -13,6 +13,12 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Offset="0.0" Color="#2A2A2A" />
+                <GradientStop Offset="1.0" Color="#0A0A0A" />
+            </RadialGradientBrush>
+        </Grid.Background>
 
         <Viewbox
             Margin="50"

@@ -17,6 +17,7 @@ namespace Jeopardy
     {
         string folder;
         TextBlock targetBlock;
+        Border selectedHintThumbnail;
 
         public InGameCanvas(string folder, TextBlock tgtblk)
         {
@@ -179,6 +180,12 @@ namespace Jeopardy
                 VerticalAlignment = VerticalAlignment.Center
             };
 
+            media.Unloaded += (_, __) =>
+            {
+                media.Stop();
+                timer.Stop();
+            };
+
             panel.Children.Add(media);
             panel.Children.Add(playButton);
             panel.Children.Add(timeline);
@@ -269,65 +276,19 @@ namespace Jeopardy
 
             // ===== SET SOURCE =====
             media.Source = new Uri(filePath, UriKind.RelativeOrAbsolute);
-
-            // ===== DRAG AND DROP LOGIC (FIXED) =====
-            Point offset = new Point();
-
-            root.MouseLeftButtonDown += (s, e) =>
-            {
-                if (e.OriginalSource is Button ||
-                    e.OriginalSource is Slider ||
-                    e.OriginalSource is Thumb)
-                {
-                    if (e.OriginalSource is Thumb || e.OriginalSource is Slider)
-                        isDraggingSlider = true;
-
-                    return;
-                }
-
-                offset = e.GetPosition(root);
-                root.CaptureMouse();
-            };
-
-            root.MouseMove += (s, e) =>
-            {
-                if (root.IsMouseCaptured)
-                {
-                    Point currentPosition = e.GetPosition(MainCanvas);
-                    Canvas.SetLeft(root, currentPosition.X - offset.X);
-                    Canvas.SetTop(root, currentPosition.Y - offset.Y);
-                }
-            };
-
-            root.MouseLeftButtonUp += (s, e) =>
-            {
-                isDraggingSlider = false;
-                if (root.IsMouseCaptured)
-                {
-                    root.ReleaseMouseCapture();
-                }
-            };
         }
 
-        void LoadGame()
+        private void LoadPageToCanvas(List<CanvasItemModel> items)
         {
-            string jsonPath = System.IO.Path.Combine(this.folder, "data.json");
-
-            // Check if file exists to prevent crashing if folder is empty!
-            if (!File.Exists(jsonPath)) return;
-
-            string json = File.ReadAllText(jsonPath);
-            List<CanvasItemModel> loadedItems = JsonSerializer.Deserialize<List<CanvasItemModel>>(json);
-
             for (int i = MainCanvas.Children.Count - 1; i >= 0; i--)
             {
-                if (MainCanvas.Children[i] is FrameworkElement fe && fe.Name != "MovablePanel")
+                if (MainCanvas.Children[i] is FrameworkElement fe && fe.Name != "MovablePanel" && fe.Name != "HintPanel")
                 {
                     MainCanvas.Children.RemoveAt(i);
                 }
             }
 
-            foreach (var item in loadedItems)
+            foreach (var item in items)
             {
                 Point pos = new Point(item.X, item.Y);
 
@@ -345,6 +306,77 @@ namespace Jeopardy
                     if (File.Exists(item.Content))
                         CreateAudio(pos, item.Content);
                 }
+            }
+        }
+
+        private void CreateThumbnail(HintPageModel pageData)
+        {
+            Border hintPage = new Border
+            {
+                Width = 144,
+                Height = 81,
+                Margin = new Thickness(5),
+                BorderThickness = new Thickness(3),
+                BorderBrush = Brushes.Black,
+                Background = Brushes.DimGray,
+                Tag = pageData 
+            };
+
+            Grid cellGrid = new Grid();
+
+            TextBlock text = new TextBlock
+            {
+                Text = pageData.HintTitle,
+                FontSize = 30,
+                Background = Brushes.Transparent,
+                Foreground = Brushes.White,
+                TextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+
+            hintPage.PreviewMouseLeftButtonDown += (s, e) =>
+            {
+                if (e.OriginalSource is Button) return;
+
+                if (selectedHintThumbnail != null)
+                {
+                    selectedHintThumbnail.BorderBrush = Brushes.Black;
+                }
+
+                LoadPageToCanvas(pageData.Items);
+
+                selectedHintThumbnail = hintPage;
+                hintPage.BorderBrush = Brushes.DeepSkyBlue;
+            };
+
+            cellGrid.Children.Add(text);
+            hintPage.Child = cellGrid;
+
+            HintPageContainer.Children.Add(hintPage);
+
+            if (HintPageContainer.Children.Count == 1)
+            {
+                var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = UIElement.PreviewMouseLeftButtonDownEvent };
+                hintPage.RaiseEvent(args);
+            }
+        }
+
+        private void LoadGame()
+        {
+            string path = System.IO.Path.Combine(this.folder, "hints.json");
+
+            if (!File.Exists(path)) return;
+
+            string json = File.ReadAllText(path);
+            List<HintPageModel> loadedPages = JsonSerializer.Deserialize<List<HintPageModel>>(json);
+
+            HintPageContainer.Children.Clear();
+            selectedHintThumbnail = null;
+            LoadPageToCanvas(new List<CanvasItemModel>());
+
+            foreach (var page in loadedPages)
+            {
+                CreateThumbnail(page);
             }
         }
 

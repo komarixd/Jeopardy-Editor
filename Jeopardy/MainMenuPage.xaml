@@ -3,59 +3,93 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Jeopardy"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Jeopardy"
     Title="MainMenuPage"
     d:DesignHeight="1080"
     d:DesignWidth="1920"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <Style x:Key="DarkThemeButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Height" Value="65"/>
+            <Setter Property="Margin" Value="0,0,0,30"/>
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#333333"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#666666"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#000000"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#222222"/>
+                                <Setter Property="Foreground" Value="#AAAAAA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Color="#2A2A2A" Offset="0.0"/>
+                <GradientStop Color="#0A0A0A" Offset="1.0"/>
+            </RadialGradientBrush>
+        </Grid.Background>
 
-            <Button
-                Width="200"
-                Margin="0,0,0,20"
-                Background="#333"
-                BorderBrush="#555"
-                BorderThickness="2"
-                Click="Play_Click"
-                FontSize="25"
-                Foreground="White">
-                Play
-            </Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <Button
-                Margin="0,0,0,20"
-                Background="#333"
-                BorderBrush="#555"
-                BorderThickness="2"
-                Click="Edit_Click"
-                FontSize="25"
-                Foreground="White">
-                Edit
-            </Button>
+        <TextBlock Grid.Row="0"
+                   Text="JEOPARDY EDITOR"
+                   FontSize="100"
+                   FontWeight="Black"
+                   Foreground="#FFCC00"
+                   HorizontalAlignment="Center"
+                   Margin="0, 150, 0, 50"
+                   FontFamily="Impact, Arial Black, Sans-Serif">
+            <TextBlock.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="10" Direction="315" Opacity="0.9"/>
+            </TextBlock.Effect>
+        </TextBlock>
 
-            <Button
-                Margin="0,0,0,20"
-                Background="#333"
-                BorderBrush="#555"
-                BorderThickness="2"
-                Click="Settings_Click"
-                FontSize="25"
-                Foreground="White">
-                Setting
-            </Button>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,150">
 
-            <Button
-                Background="#333"
-                BorderBrush="#555"
-                BorderThickness="2"
-                Click="Exit_Click"
-                FontSize="25"
-                Foreground="White">
-                Exit
-            </Button>
+            <Button Style="{StaticResource DarkThemeButtonStyle}"
+                    Content="PLAY"
+                    Click="Play_Click"/>
+
+            <Button Style="{StaticResource DarkThemeButtonStyle}"
+                    Content="EDIT"
+                    Click="Edit_Click"/>
+
+            <Button Style="{StaticResource DarkThemeButtonStyle}"
+                    Content="EXIT"
+                    Click="Exit_Click"/>
 
         </StackPanel>
     </Grid>

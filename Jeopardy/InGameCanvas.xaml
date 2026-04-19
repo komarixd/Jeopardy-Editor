@@ -12,10 +12,42 @@
     mc:Ignorable="d">
 
     <Grid x:Name="Grid1">
+
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Offset="0.0" Color="#2A2A2A" />
+                <GradientStop Offset="1.0" Color="#0A0A0A" />
+            </RadialGradientBrush>
+        </Grid.Background>
+
         <Canvas
             x:Name="MainCanvas"
             Background="Transparent"
-            Focusable="True" />
+            Focusable="True">
+
+            <Border
+                x:Name="HintPanel"
+                Canvas.Top="0"
+                Width="1920"
+                Height="115"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Background="#333">
+
+
+                <StackPanel Orientation="Horizontal">
+
+                    <StackPanel
+                        x:Name="HintPageContainer"
+                        Margin="10"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal" />
+
+                </StackPanel>
+
+            </Border>
+
+        </Canvas>
 
         <Button
             Margin="0,978,1718,0"

@@ -14,6 +14,14 @@
 
     <Grid x:Name="grid1">
 
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Offset="0.0" Color="#2A2A2A" />
+                <GradientStop Offset="1.0" Color="#0A0A0A" />
+            </RadialGradientBrush>
+        </Grid.Background>
+
+        <!--  Settings Panel  -->
         <Grid
             x:Name="SettingPanel"
             Panel.ZIndex="99"
@@ -69,15 +77,53 @@
             </Border>
         </Grid>
 
+        <!--  Main Canvas  -->
         <Canvas
             x:Name="MainCanvas"
             Background="Transparent"
             Focusable="True">
 
+            <!--  Hint Panel  -->
+            <Border
+                x:Name="HintPanel"
+                Canvas.Top="0"
+                Width="1920"
+                Height="115"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Background="#333">
+
+
+                <StackPanel Orientation="Horizontal">
+
+                    <StackPanel
+                        x:Name="HintPageContainer"
+                        Margin="10"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal" />
+
+                    <Button
+                        x:Name="AddHintPageBtn"
+                        Width="60"
+                        Height="80"
+                        Margin="10,0,10,0"
+                        VerticalAlignment="Center"
+                        Background="#777"
+                        BorderBrush="#222"
+                        BorderThickness="2"
+                        Click="AddHintPage"
+                        Content="+"
+                        FontSize="30"
+                        Foreground="White" />
+
+                </StackPanel>
+
+            </Border>
+
             <!--  Movable Menu Panel  -->
             <Border
                 x:Name="MovablePanel"
-                Canvas.Top="50"
+                Canvas.Top="280"
                 Width="80"
                 Height="307"
                 HorizontalAlignment="Center"

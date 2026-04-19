@@ -151,7 +151,7 @@ namespace Jeopardy
             if (isNew)
             {
                 Directory.CreateDirectory(NewFolderName);
-                File.WriteAllText(System.IO.Path.Combine(NewFolderName, "data.json"), "[]");
+                File.WriteAllText(System.IO.Path.Combine(NewFolderName, "hints.json"), "[{\"HintTitle\":\"Hint\",\"Items\":[]}]");
             }
 
             Border cellBorder = new Border

@@ -47,7 +47,7 @@ namespace Jeopardy
 
             Grid headerGrid = new Grid();
 
-            TextBox titleBox = new TextBox
+            TextBlock titleBox = new TextBlock
             {
                 Text = "CATEGORY",
                 FontSize = 24,
@@ -57,8 +57,6 @@ namespace Jeopardy
                 Foreground = Brushes.White,
                 Padding = new Thickness(15),
                 Margin = new Thickness(0, 0, 0, 10),
-                BorderThickness = new Thickness(2),
-                BorderBrush = Brushes.White
             };
 
 
@@ -119,7 +117,7 @@ namespace Jeopardy
                 {
                     AddColumn();
                     StackPanel columnStack = BoardContainer.Children[BoardContainer.Children.Count - 1] as StackPanel;
-                    TextBox titleBox = (columnStack.Children[0] as Grid).Children[0] as TextBox;
+                    TextBlock titleBox = (columnStack.Children[0] as Grid).Children[0] as TextBlock;
                     titleBox.Text = col.Title;
                     StackPanel rowContainer = columnStack.Children[1] as StackPanel;
                     rowContainer.Children.Clear();
