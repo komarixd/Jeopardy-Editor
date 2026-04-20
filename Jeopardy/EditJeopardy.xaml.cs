@@ -37,6 +37,7 @@ namespace Jeopardy
             InitializeComponent();
             rnd = new Random();
             this.folder = folder;
+            MapTitleText.Text = File.ReadAllLines(System.IO.Path.Combine(folder, "mapinfo"))[0];
             LoadGame();
         }
 
@@ -364,6 +365,17 @@ namespace Jeopardy
             }
 
             _isLoading = false; // Resume AutoSave functionality
+        }
+
+        private void Page_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape && EditPanel.Visibility == Visibility.Visible)
+            {
+                EditPanel.Visibility = Visibility.Collapsed;
+                return;
+            }
+            AutoSave();
+            NavigationService.GoBack();
         }
     }
 }

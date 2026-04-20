@@ -11,8 +11,48 @@
     Background="Black"
     mc:Ignorable="d">
 
-    <Grid>
+    <Page.Resources>
+        <Style x:Key="DarkThemeButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="280" />
+            <Setter Property="Height" Value="65" />
+            <Setter Property="Margin" Value="0,0,0,30" />
+            <Setter Property="Background" Value="#1E1E1E" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
 
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#333333" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#666666" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#000000" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#222222" />
+                                <Setter Property="Foreground" Value="#AAAAAA" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
         <Grid.Background>
             <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
                 <GradientStop Offset="0.0" Color="#2A2A2A" />
@@ -20,25 +60,22 @@
             </RadialGradientBrush>
         </Grid.Background>
 
-        <Label x:Name="Mode">Mode</Label>
+        <Label x:Name="Mode" Visibility="Collapsed">Mode</Label>
 
-        <!--  New Map Box  -->
         <Grid
             x:Name="NewMapPanel"
             Panel.ZIndex="99"
             Visibility="Collapsed">
-
-
             <Border Background="#AA000000" />
-
             <Border
-                Width="400"
+                Width="450"
                 Padding="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#2D2D2D"
                 BorderBrush="Gray"
-                BorderThickness="1">
+                BorderThickness="1"
+                CornerRadius="8">
                 <StackPanel>
                     <TextBlock
                         Margin="0,0,0,15"
@@ -46,70 +83,69 @@
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Create New Map" />
-
                     <TextBlock Foreground="LightGray" Text="Map Name:" />
                     <TextBox
                         x:Name="NewMapName"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Author:" />
                     <TextBox
                         x:Name="NewMapAuthor"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Diffuculty:" />
                     <TextBox
                         x:Name="NewMapDiff"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Description:" />
                     <TextBox
                         x:Name="NewMapDesc"
-                        Height="60"
-                        Margin="0,5,0,10"
+                        Height="80"
+                        Margin="0,5,0,15"
                         Padding="5"
                         AcceptsReturn="True"
+                        FontSize="16"
                         TextWrapping="Wrap" />
-
-                    <StackPanel
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button
-                            Width="80"
-                            Margin="5"
+                            Width="120"
+                            Height="45"
+                            Margin="5,0,5,0"
                             Click="CreateNewMap"
-                            Content="Save Map" />
+                            Content="Save Map"
+                            FontSize="18"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                         <Button
-                            Width="80"
-                            Margin="5"
+                            Width="120"
+                            Height="45"
+                            Margin="5,0,0,0"
                             Click="HideNewMapPanel"
-                            Content="Cancel" />
+                            Content="Cancel"
+                            FontSize="18"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!--  Edit Map Box  -->
         <Grid
             x:Name="EditMapPanel"
             Panel.ZIndex="99"
             Visibility="Collapsed">
-
             <Border Background="#AA000000" />
-
             <Border
-                Width="400"
+                Width="450"
                 Padding="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#2D2D2D"
                 BorderBrush="Gray"
-                BorderThickness="1">
-
+                BorderThickness="1"
+                CornerRadius="8">
                 <StackPanel>
                     <TextBlock
                         Margin="0,0,0,15"
@@ -117,129 +153,145 @@
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Edit Map" />
-
                     <TextBlock Foreground="LightGray" Text="Map Name:" />
                     <TextBox
                         x:Name="EditMapName"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Author:" />
                     <TextBox
                         x:Name="EditMapAuthor"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Diffuculty:" />
                     <TextBox
                         x:Name="EditMapDiff"
                         Margin="0,5,0,10"
-                        Padding="5" />
-
+                        Padding="5"
+                        FontSize="16" />
                     <TextBlock Foreground="LightGray" Text="Description:" />
                     <TextBox
                         x:Name="EditMapDesc"
-                        Height="60"
-                        Margin="0,5,0,10"
+                        Height="80"
+                        Margin="0,5,0,15"
                         Padding="5"
                         AcceptsReturn="True"
+                        FontSize="16"
                         TextWrapping="Wrap" />
-
-                    <StackPanel
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button
-                            Width="80"
-                            Margin="5"
+                            Width="110"
+                            Height="45"
+                            Margin="5,0"
                             Click="SaveMapEdit"
-                            Content="Save Map" />
+                            Content="Save Map"
+                            FontSize="18"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                         <Button
-                            Width="80"
-                            Margin="5"
+                            Width="110"
+                            Height="45"
+                            Margin="5,0"
                             Click="EditJeopardy"
-                            Content="Edit" />
+                            Content="Edit"
+                            FontSize="18"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                         <Button
-                            Width="80"
-                            Margin="5"
+                            Width="110"
+                            Height="45"
+                            Margin="5,0,0,0"
                             Click="HideEditMapPanel"
-                            Content="Cancel" />
-
+                            Content="Cancel"
+                            FontSize="18"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!--  Search Box  -->
-        <Grid Margin="10,20,10,10">
-            <TextBox
-                x:Name="SearchBox"
-                Margin="250,124,589,827"
-                Padding="5"
-                FontSize="30"
-                TextChanged="SearchBox_TextChanged" />
-            <TextBlock
-                Margin="258,130,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                FontSize="30"
-                Foreground="DarkGray"
-                IsHitTestVisible="False"
-                Text="Search maps...">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="50,80,50,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="1" Margin="0,0,20,0">
+                    <TextBox
+                        x:Name="SearchBox"
+                        Padding="15,10"
+                        VerticalContentAlignment="Center"
+                        FontSize="24"
+                        TextChanged="SearchBox_TextChanged" />
+                    <TextBlock
+                        Margin="18,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Foreground="DarkGray"
+                        IsHitTestVisible="False"
+                        Text="Search maps...">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Button
+                    Grid.Column="2"
+                    Height="Auto"
+                    Margin="0"
+                    Click="ShowNewMapPanel"
+                    Content="New Map"
+                    Style="{StaticResource DarkThemeButtonStyle}" />
+            </Grid>
+
+            <ScrollViewer
+                Grid.Row="1"
+                Margin="50,0,50,0"
+                Padding="0,0,10,0"
+                VerticalScrollBarVisibility="Auto">
+                <WrapPanel
+                    x:Name="MapGrid"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    ItemWidth="280" />
+            </ScrollViewer>
+
+            <Grid Grid.Row="2">
+
+                <Button
+                    Margin="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Click="GoMenu"
+                    Content="Back"
+                    Style="{StaticResource DarkThemeButtonStyle}" />
+
+                <Button
+                    Margin="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Click="Refresh"
+                    Content="Refresh Map"
+                    Style="{StaticResource DarkThemeButtonStyle}" />
+            </Grid>
         </Grid>
-        <Button
-            Margin="1344,141,250,835"
-            Background="#333"
-            BorderBrush="#555"
-            BorderThickness="2"
-            Click="ShowNewMapPanel"
-            FontSize="30"
-            Foreground="White">
-            New Map
-        </Button>
-
-        <ScrollViewer Margin="250,250,250,0" VerticalScrollBarVisibility="Auto">
-            <UniformGrid
-                x:Name="MapGrid"
-                Margin="10"
-                VerticalAlignment="Top"
-                Columns="4" />
-        </ScrollViewer>
-
-
-
-        <Button
-            Margin="0,978,1718,0"
-            Background="#333"
-            BorderBrush="#555"
-            BorderThickness="2"
-            Click="GoMenu"
-            FontSize="25"
-            Foreground="White">
-            Back
-        </Button>
-
-        <Button
-            Margin="1718,978,0,0"
-            Background="#333"
-            BorderBrush="#555"
-            BorderThickness="2"
-            Click="Refresh"
-            FontSize="25"
-            Foreground="White">
-            Refresh Map
-        </Button>
-
     </Grid>
 </Page>

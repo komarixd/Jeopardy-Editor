@@ -14,4 +14,4 @@ A WPF desktop application designed to create, edit, and manage question sets for
 ## 🚀 Getting Started
 1. Download the latest version from the [Releases](../../releases) page.
 2. Extract the ZIP file.
-3. Run `jeopardy.exe`.
+3. Run `JeopardyEditor.application`.

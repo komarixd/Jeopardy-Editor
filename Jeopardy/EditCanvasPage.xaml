@@ -8,12 +8,53 @@
     Title="EditCanvasPage"
     d:DesignHeight="1080"
     d:DesignWidth="1920"
+    Background="Black"
     Focusable="True"
     PreviewMouseDown="Page_PreviewMouseDown"
     mc:Ignorable="d">
 
-    <Grid x:Name="grid1">
+    <Page.Resources>
+        <Style x:Key="DarkThemeButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="280" />
+            <Setter Property="Height" Value="65" />
+            <Setter Property="Margin" Value="0,0,0,30" />
+            <Setter Property="Background" Value="#1E1E1E" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
 
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#333333" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#666666" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#000000" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#222222" />
+                                <Setter Property="Foreground" Value="#AAAAAA" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid x:Name="grid1">
         <Grid.Background>
             <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
                 <GradientStop Offset="0.0" Color="#2A2A2A" />
@@ -21,81 +62,68 @@
             </RadialGradientBrush>
         </Grid.Background>
 
-        <!--  Settings Panel  -->
         <Grid
             x:Name="SettingPanel"
             Panel.ZIndex="99"
             Visibility="Collapsed">
-            <Border
-                Width="1920"
-                Height="1080"
-                Background="#AA000000" />
+            <Border Background="#AA000000" />
 
             <Border
-                Width="300"
+                Width="350"
                 Padding="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#2D2D2D"
                 BorderBrush="Gray"
-                BorderThickness="1">
+                BorderThickness="1"
+                CornerRadius="8">
                 <StackPanel>
                     <TextBlock
                         HorizontalAlignment="Center"
-                        FontSize="30"
+                        FontSize="24"
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Settings" />
 
-
-                    <StackPanel Margin="0,25,0,0">
+                    <StackPanel
+                        Margin="0,25,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
                         <Button
-                            Width="90"
-                            Height="30"
+                            Width="130"
+                            Height="45"
                             Margin="5"
-                            Background="#333"
-                            BorderBrush="#555"
-                            BorderThickness="2"
                             Click="SaveButton_Click"
                             Content="Save &amp; Exit"
-                            FontSize="14"
-                            Foreground="White" />
-
+                            FontSize="16"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                         <Button
-                            Width="90"
-                            Height="30"
+                            Width="130"
+                            Height="45"
                             Margin="5"
-                            Background="#333"
-                            BorderBrush="#555"
-                            BorderThickness="2"
                             Click="HideSettingPanel"
-                            Content="Cancel"
-                            FontSize="14"
-                            Foreground="White" />
+                            Content="Close"
+                            FontSize="16"
+                            Style="{StaticResource DarkThemeButtonStyle}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!--  Main Canvas  -->
-        <Canvas
-            x:Name="MainCanvas"
-            Background="Transparent"
-            Focusable="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <!--  Hint Panel  -->
             <Border
                 x:Name="HintPanel"
-                Canvas.Top="0"
-                Width="1920"
+                Grid.Row="0"
                 Height="115"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Background="#333">
-
-
-                <StackPanel Orientation="Horizontal">
-
+                Background="#1E1E1E"
+                BorderBrush="#444444"
+                BorderThickness="0,0,0,2">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <StackPanel
                         x:Name="HintPageContainer"
                         Margin="10"
@@ -104,106 +132,109 @@
 
                     <Button
                         x:Name="AddHintPageBtn"
-                        Width="60"
+                        Width="70"
                         Height="80"
                         Margin="10,0,10,0"
                         VerticalAlignment="Center"
-                        Background="#777"
-                        BorderBrush="#222"
-                        BorderThickness="2"
                         Click="AddHintPage"
                         Content="+"
-                        FontSize="30"
-                        Foreground="White" />
-
+                        FontSize="40"
+                        FontWeight="Black"
+                        Style="{StaticResource DarkThemeButtonStyle}" />
                 </StackPanel>
-
             </Border>
 
-            <!--  Movable Menu Panel  -->
-            <Border
-                x:Name="MovablePanel"
-                Canvas.Top="280"
-                Width="80"
-                Height="307"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Panel.ZIndex="10"
-                Background="LightSkyBlue"
-                CornerRadius="7"
-                MouseLeftButtonDown="MovablePanel_MouseLeftButtonDown"
-                MouseLeftButtonUp="MovablePanel_MouseLeftButtonUp"
-                MouseMove="MovablePanel_MouseMove">
+            <Canvas
+                x:Name="MainCanvas"
+                Grid.Row="1"
+                Background="Transparent"
+                Focusable="True">
 
-                <StackPanel Margin="10">
-                    <Button
-                        Width="55"
-                        Height="55"
-                        Margin="0,45,0,5"
-                        Click="Cursor_Click"
-                        Cursor="Hand">
-                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Border
+                    x:Name="MovablePanel"
+                    Canvas.Left="50"
+                    Canvas.Top="50"
+                    Width="80"
+                    Panel.ZIndex="10"
+                    Background="gray"
+                    BorderBrush="#444444"
+                    BorderThickness="2"
+                    CornerRadius="12"
+                    MouseLeftButtonDown="MovablePanel_MouseLeftButtonDown"
+                    MouseLeftButtonUp="MovablePanel_MouseLeftButtonUp"
+                    MouseMove="MovablePanel_MouseMove">
+
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="10"
+                            Opacity="0.5"
+                            ShadowDepth="5"
+                            Color="Black" />
+                    </Border.Effect>
+
+                    <StackPanel Margin="10,15,10,15">
+
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            HorizontalAlignment="Center"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="#666"
+                            IsHitTestVisible="False">
+                            =
+                        </TextBlock>
+
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Margin="0,0,0,10"
+                            Click="Cursor_Click"
+                            ToolTip="Cursor">
                             <Image
-                                Width="30"
-                                Height="30"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="/Resources/Images/cursor.png"
-                                ToolTip="Cursor" />
-                        </StackPanel>
-                    </Button>
+                                Width="25"
+                                Height="25"
+                                Source="/Resources/Images/cursor.png" />
+                        </Button>
 
-                    <Button
-                        Width="55"
-                        Height="55"
-                        Margin="0,0,0,5"
-                        Click="Text_Click">
-                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Margin="0,0,0,10"
+                            Click="Text_Click"
+                            ToolTip="Add Text">
                             <Image
-                                Width="30"
-                                Height="30"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="/Resources/Images/text.png"
-                                ToolTip="Add Text" />
-                        </StackPanel>
-                    </Button>
+                                Width="25"
+                                Height="25"
+                                Source="/Resources/Images/text.png" />
+                        </Button>
 
-                    <Button
-                        Width="55"
-                        Height="55"
-                        Margin="0,0,0,5"
-                        Click="Image_Click">
-                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Margin="0,0,0,10"
+                            Click="Image_Click"
+                            ToolTip="Add Image">
                             <Image
-                                Width="30"
-                                Height="30"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="/Resources/Images/image.png"
-                                ToolTip="Add Image" />
-                        </StackPanel>
-                    </Button>
+                                Width="25"
+                                Height="25"
+                                Source="/Resources/Images/image.png" />
+                        </Button>
 
-                    <Button
-                        Width="55"
-                        Height="55"
-                        Margin="0,0,0,5"
-                        Click="Audio_Click">
-                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Margin="0"
+                            Click="Audio_Click"
+                            ToolTip="Add Audio">
                             <Image
-                                Width="30"
-                                Height="30"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="/Resources/Images/audio.png"
-                                ToolTip="Add Audio" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                                Width="25"
+                                Height="25"
+                                Source="/Resources/Images/audio.png" />
+                        </Button>
+                    </StackPanel>
 
-            </Border>
-
-        </Canvas>
+                </Border>
+            </Canvas>
+        </Grid>
     </Grid>
 </Page>

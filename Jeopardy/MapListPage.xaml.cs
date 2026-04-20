@@ -258,6 +258,7 @@ namespace Jeopardy
 
         private void EditJeopardy(object sender, RoutedEventArgs e)
         {
+            EditMapPanel.Visibility = Visibility.Collapsed;
             NavigationService.Navigate(new EditJeopardy(targetFolder));
         }
 
@@ -330,10 +331,17 @@ namespace Jeopardy
         {
             if (e.Key == Key.Escape)
             {
-                if (this.NavigationService != null)
+                if (NewMapPanel.Visibility == Visibility.Visible)
                 {
-                    this.NavigationService.Navigate(new MainMenuPage());
+                    NewMapPanel.Visibility = Visibility.Collapsed;
+                    return;
                 }
+                if (EditMapPanel.Visibility == Visibility.Visible)
+                {
+                    EditMapPanel.Visibility = Visibility.Collapsed;
+                    return;
+                }
+                NavigationService.GoBack();
             }
         }
 

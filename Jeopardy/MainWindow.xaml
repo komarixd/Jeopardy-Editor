@@ -5,23 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Jeopardy"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
-
-    WindowStyle="None"
-    WindowState="Maximized"
-    
+    Title="Jeopardy Editor"
     Background="#000000"
+    WindowState="Maximized"
+    WindowStyle="None"
     mc:Ignorable="d">
     <!--  242e9c  -->
 
-    <!-- Windowed
-    Width="1920"
-    Height="1080"
-     -->
-    
-    <!-- Fullscreen
-    WindowStyle="None"
-    WindowState="Maximized"
+    <!--
+        Windowed
+        Width="1920"
+        Height="1080"
+    -->
+
+    <!--
+        Fullscreen
+        WindowStyle="None"
+        WindowState="Maximized"
     -->
 
     <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />

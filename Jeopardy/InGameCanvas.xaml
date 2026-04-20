@@ -11,8 +11,47 @@
     Background="Black"
     mc:Ignorable="d">
 
-    <Grid x:Name="Grid1">
+    <Page.Resources>
+        <Style x:Key="DarkThemeButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
 
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#333333"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#666666"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#000000"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#222222"/>
+                                <Setter Property="Foreground" Value="#AAAAAA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid x:Name="Grid1">
         <Grid.Background>
             <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
                 <GradientStop Offset="0.0" Color="#2A2A2A" />
@@ -20,55 +59,34 @@
             </RadialGradientBrush>
         </Grid.Background>
 
-        <Canvas
-            x:Name="MainCanvas"
-            Background="Transparent"
-            Focusable="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Border
-                x:Name="HintPanel"
-                Canvas.Top="0"
-                Width="1920"
-                Height="115"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Background="#333">
-
-
-                <StackPanel Orientation="Horizontal">
-
-                    <StackPanel
-                        x:Name="HintPageContainer"
-                        Margin="10"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal" />
-
+            <Border x:Name="HintPanel" Grid.Row="0" Height="115" Background="#1E1E1E" BorderBrush="#444444" BorderThickness="0,0,0,2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel x:Name="HintPageContainer" Margin="10" VerticalAlignment="Center" Orientation="Horizontal" />
                 </StackPanel>
-
             </Border>
 
-        </Canvas>
+            <Canvas x:Name="MainCanvas" Grid.Row="1" Background="Transparent" Focusable="True">
+            </Canvas>
 
-        <Button
-            Margin="0,978,1718,0"
-            Background="#333"
-            BorderBrush="#555"
-            BorderThickness="2"
-            Click="GoBack"
-            FontSize="25"
-            Foreground="White">
-            Exit
-        </Button>
-        <Button
-            Margin="1718,978,0,0"
-            Background="#333"
-            BorderBrush="#555"
-            BorderThickness="2"
-            Click="Done"
-            FontSize="25"
-            Foreground="White">
-            Done
-        </Button>
+            <Grid Grid.Row="2" Margin="20">
+                <Button Content="Exit" 
+                        Style="{StaticResource DarkThemeButtonStyle}" 
+                        HorizontalAlignment="Left" 
+                        Click="GoBack"/>
+
+                <Button Content="Done" 
+                        Style="{StaticResource DarkThemeButtonStyle}" 
+                        HorizontalAlignment="Right" 
+                        Click="Done"/>
+            </Grid>
+        </Grid>
+
     </Grid>
-
 </Page>

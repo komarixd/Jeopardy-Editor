@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Jeopardy
 {
@@ -23,18 +16,18 @@ namespace Jeopardy
     public partial class InGameJeopardy : Page
     {
         string folder;
-
         Random rnd;
+
         public InGameJeopardy(string folder)
         {
             InitializeComponent();
             this.KeepAlive = true;
             rnd = new Random();
-
             this.folder = folder;
 
-            LoadGame();
+            MapTitleText.Text = File.ReadAllLines(System.IO.Path.Combine(folder, "mapinfo"))[0];
 
+            LoadGame();
         }
 
         private void AddColumn()
@@ -59,8 +52,7 @@ namespace Jeopardy
                 Margin = new Thickness(0, 0, 0, 10),
             };
 
-
-            StackPanel rowContainer = new StackPanel(); 
+            StackPanel rowContainer = new StackPanel();
 
             headerGrid.Children.Add(titleBox);
 
@@ -79,7 +71,8 @@ namespace Jeopardy
                 Background = new SolidColorBrush(Color.FromRgb(30, 80, 180)),
                 BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(2),
-                CornerRadius = new CornerRadius(5)
+                CornerRadius = new CornerRadius(5),
+                Cursor = Cursors.Hand // ADDED: Makes it obvious the tile is clickable during gameplay
             };
 
             Grid cellGrid = new Grid();
@@ -123,7 +116,6 @@ namespace Jeopardy
                     rowContainer.Children.Clear();
                     foreach (var cell in col.Cells)
                     {
-
                         AddCell(rowContainer);
                         Border cellBorder = rowContainer.Children[rowContainer.Children.Count - 1] as Border;
                         TextBlock valueBtn = (cellBorder.Child as Grid).Children[0] as TextBlock;

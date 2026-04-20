@@ -108,7 +108,7 @@ namespace Jeopardy
             }
 
             bool isPlaying = false;
-            bool isDraggingSlider = false; // NEW: Track if user is sliding
+            bool isDraggingSlider = false;
 
             DispatcherTimer timer = new DispatcherTimer
             {
@@ -319,7 +319,8 @@ namespace Jeopardy
                 BorderThickness = new Thickness(3),
                 BorderBrush = Brushes.Black,
                 Background = Brushes.DimGray,
-                Tag = pageData 
+                Tag = pageData,
+                Cursor = Cursors.Hand // ADDED: Makes thumbnail obviously clickable
             };
 
             Grid cellGrid = new Grid();
